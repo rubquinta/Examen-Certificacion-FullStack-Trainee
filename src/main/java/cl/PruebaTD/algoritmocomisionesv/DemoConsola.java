@@ -46,19 +46,10 @@ public class NumeroCuenta {
             System.out.print("Ingrese un número de cuenta de 9 dígitos: ");
             String input = scanner.nextLine();
 
-            if (input.isEmpty() || input.length() < 5 || input.length() > 9) {
-                System.out.println("Error RB: Número inválido. Intente de nuevo.");
-                intentos++;
-                continue;
-            }
-
             try {
+                PROCESS_ERROR_CONDITION(input);
+
                 long numeroCuenta = Long.parseLong(input);
-                if (numeroCuenta < 0 || (numeroCuenta % 1 != 0)) {
-                    System.out.println("Error RB: Número inválido. Intente de nuevo.");
-                    intentos++;
-                    continue;
-                }
 
                 int digitoCalculado = calcularDigito(numeroCuenta);
 
@@ -74,13 +65,24 @@ public class NumeroCuenta {
                 String nuevoNumeroCuenta = input.substring(0, 9) + digitoCalculado;
                 System.out.println("Nuevo número de cuenta: " + nuevoNumeroCuenta);
                 System.out.println("Ingrese otro número de cuenta.");
-            } catch (NumberFormatException e) {
-                System.out.println("Error RB: Número inválido. Intente de nuevo.");
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage() + " Intente de nuevo.");
                 intentos++;
             }
         }
 
         System.out.println("Máximo de intentos alcanzado. Programa terminado.");
+    }
+
+    public static void PROCESS_ERROR_CONDITION(String input) throws Exception {
+        if (input.isEmpty() || input.length() < 5 || input.length() > 9) {
+            throw new Exception("Número inválido.");
+        }
+
+        long numeroCuenta = Long.parseLong(input);
+        if (numeroCuenta < 0 || (numeroCuenta % 1 != 0)) {
+            throw new Exception("Número inválido.");
+        }
     }
 
     public static int calcularDigito(long numeroCuenta) {
@@ -92,5 +94,6 @@ public class NumeroCuenta {
         return 11 - (int) suma;
     }
 }
+
 
 }
